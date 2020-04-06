@@ -1,0 +1,97 @@
+---
+title: "RESULTS demo"
+author: "Hardy Griesbauer"
+date: "06/04/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This short vignette will demonstrate a few ways that we can query for BC silviculture data using the `bcdata` and `bcmaps` packages developed by Andy Teucher, Sam Albers, Stepanie Hazlitt and others.  The package's website is here: https://bcgov.github.io/bcdata/
+
+
+
+## Silviculture data in BC
+Information on silviculture in BC isThe RESULTS database (Reporting Silviculture Updates and Land Status Tracking System) stores silviculture information on the management of openings, disturbances, silviculture activities and obligation declarations as required by the Forest and Range Practices Act.  Data in RESULTS are publically available through data.gov.bc.ca.  More information on RESULTS can be found here: https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results
+
+## Getting started
+First thing we need to do is make sure we have some packages installed.  If you don't have the package already installed on your machine, run the following code to install from CRAN:
+
+```{r install bcdata,eval=FALSE}
+# Install bcdata from CRAN
+install.packages("bcdata")
+
+```
+
+
+To start the demo, let's load some libraries:
+```{r,message=FALSE,warning=FALSE}
+
+library(tidyverse)
+library(bcdata)
+library(mapview)
+library(bcmaps)
+library(bcmapsdata)
+
+```
+
+### Different ways to use the bcdata package
+
+The main functions in `bcdata` are:
+
+bcdc_browse() - Open the catalogue in your default browser
+bcdc_search() - Search records in the catalogue
+bcdc_search_facets() - List catalogue facet search options
+bcdc_get_record() - Print a catalogue record
+bcdc_get_data() - Get catalogue data
+bcdc_query_geodata() - Get & query catalogue geospatial data available through a Web Service
+
+Let's start with the bcdc_browse() function:
+
+```{r browse}
+
+bcdc_browse()
+
+```
+
+
+```{r search}
+
+bcdc_search("silviculture")
+
+```
+
+```{r}
+
+bcdc_get_record("3666c26a-32d8-43e4-b8ad-59a315c7d3ce")
+
+```
+
+## Questions
+Let's answer some questions in R
+
+### Herbicide use in the Omineca Region
+I was recently asked to provide data on how much area is being chemically herbicided in the Omineca Region each year.  Brushing data are found in the RESULTS activity treatment unit dataset.  To do this, we will do the following:
+
+
+
+```{r}
+# 
+
+
+# Activity treatment units
+bcdc_search("RESULTS activity")
+
+# Let's query this record
+x<-bcdc_query_geodata("results-activity-treatment-units")
+
+
+
+
+
+```
+
+
+
