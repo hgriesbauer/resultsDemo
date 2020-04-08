@@ -23,6 +23,9 @@ First thing we need to do is make sure we have some packages installed.  If you 
 # Install bcdata from CRAN
 install.packages("bcdata")
 
+# Install bcmaps from CRAN
+install.packages("bcmaps")
+
 ```
 
 
@@ -48,14 +51,6 @@ bcdc_get_record() - Print a catalogue record
 bcdc_get_data() - Get catalogue data
 bcdc_query_geodata() - Get & query catalogue geospatial data available through a Web Service
 
-Let's start with the bcdc_browse() function:
-
-```{r browse}
-
-bcdc_browse()
-
-```
-
 
 ```{r search}
 
@@ -73,25 +68,93 @@ bcdc_get_record("3666c26a-32d8-43e4-b8ad-59a315c7d3ce")
 Let's answer some questions in R
 
 ### Herbicide use in the Omineca Region
-I was recently asked to provide data on how much area is being chemically herbicided in the Omineca Region each year.  Brushing data are found in the RESULTS activity treatment unit dataset.  To do this, we will do the following:
+I was recently asked to provide data on how much area is being chemically herbicided in the Omineca Region each year.  Brushing data are found in the RESULTS activity treatment unit dataset.  
+
+A few notes:
+RESULTS datasets are provincial, and the total dataset is >2gB in size.  So, we'll want to query and filter out records as much as possible before downloading.
 
 
 
 ```{r}
-# 
-
-
-# Activity treatment units
-bcdc_search("RESULTS activity")
-
-# Let's query this record
-x<-bcdc_query_geodata("results-activity-treatment-units")
+# First let's get the Omineca Region
+# Now let's take a look at the record and see what columns are in there
 
 
 
+x<-bcdc_get_record("natural-resource-nr-district") 
+bcdc_search("NR districts")
+
+
+dpg<-bcdc_query_geodata("natural-resource-nr-district") %>% 
+  filter(ORG_UNIT=="DPG") %>% # filter for Prince George District
+  collect() # collect this object
+
+# Plot
+mapview(dpg)
+
+
+
+```
+
+Now we can use the PG District to filter RESULTS planting information:
+
+```{r}
+# First, let's take a look at the RESULTS planting dataset
+bcdc_search("RESULTS Silviculture") # return the first two records
+
+# Next, let's look at the structure of the data
+bcdc_describe_feature("results-activity-treatment-units")
+
+bcdc_describe_feature("results-forest-cover-silviculture")
+
+ romLW<-  
+     filter(WITHIN(dpg)) %>% 
+    filter(S_SPECIES_CODE_1=="LW"|
+             S_SPECIES_CODE_2=="LW"|
+             S_SPECIES_CODE_3=="LW"|
+             S_SPECIES_CODE_4=="LW"|
+             S_SPECIES_CODE_5=="LW") %>% 
+    collect()
+   
+
+ 
+ mapview(list(romLW,dpg))
 
 
 ```
 
 
 
+The following layers contains information:
+
+RESULTS - Openings svw:
+  - Harvest date
+  - Previous species
+  - Site index
+  - Brushing
+  - Planting date
+  
+RESULTS - Activity Treatment Units
+ - Lists all activities within a treatment unit including planting numbers (but not species)
+ 
+ RESULTS - Silviculture
+ - List species and stems per hectare
+ 
+ RESULTS - Forest Cover Species (Attribute Only)
+ 
+```{r}
+
+# Next, let's look at the structure of the data
+bcdc_describe_feature("results-activity-treatment-units")
+
+bcdc_query_geodata("results-activity-treatment-units")
+
+ bcdc_query_geodata("results-forest-cover-silviculture") %>% 
+   filter(SILV_POLYGON_AREA<2) %>% 
+    filter(WITHIN(dpg))  
+  
+ 
+ 
+```
+ 
+ 
