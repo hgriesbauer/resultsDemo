@@ -3,8 +3,8 @@ title: "Querying RESULTS silviculture data using R"
 author: "Hardy Griesbauer"
 date: "06/04/2020"
 output: 
-  html_document:
-    keep_md: yes
+  
+  github_document
 
 ---
 
