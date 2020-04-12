@@ -2,7 +2,7 @@
 title: "Querying RESULTS silviculture data using R"
 author: "Hardy Griesbauer"
 date: "06/04/2020"
-output: github_document
+output: html_document
 
 ---
 
