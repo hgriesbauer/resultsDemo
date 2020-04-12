@@ -30,8 +30,21 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Silviculture data in BC
 Silviculture information in BC is largely collected and tracked through the RESULTS database (Reporting Silviculture Updates and Land Status Tracking System).  The database stores silviculture-related information on the management of openings, disturbances, silviculture activities and obligation declarations as required by the Forest and Range Practices Act.  Data in RESULTS are publically available through catalogue.data.gov.bc.ca.  More information on RESULTS can be found here: https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results
 
-### R packages
-The `bcdata` and `bcmaps` packages now provide an easy way to query, download and visualize RESULTS data through the R interface. This short vignette will demonstrate a few ways that we can do this.  These packages have been developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and more information can be found here: https://bcgov.github.io/bcdata/
+### bcdata and bcmaps R packages
+The `bcdata` and `bcmaps` packages now provide an easy way to query, download and visualize select BC government datasets through the R interface. This short vignette will demonstrate a few ways that we can do this using RESULTS and other datasets.  These packages have been developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and more information can be found here: https://bcgov.github.io/bcdata/
+
+While BC government data can usually be downloaded through your browser at catalogue.data.gov.bc.ca, I think there are some advantages to using the `bcdata` package to download data form within R:
+
+1. You are not limited to download limits;
+2. You can query the data before downloading to extract only what you need;
+3. After downloading, you can quickly work with the data in R; and
+4. Development team is very responsive and great to work with!  
+
+A few limitations I have run into using these packages:
+
+1. Generally, only spatial data can be downloaded;
+2. Broadband issues - there are times where downloading data from `bcdata` has been slow;
+3. Because packages are under development, there are some bugs (usually mistakes from my end!).
 
 ## Getting started
 First thing we need to do is make sure we have some packages installed.  If you don't have the package already installed on your machine, run the following code to install from CRAN:
@@ -45,7 +58,7 @@ install.packages("bcmaps")
 
 ```
 
-To start the demo, let's load some libraries:
+To start the demo, let's load some other libraries:
 ```{r,message=FALSE,warning=FALSE}
 
 library(tidyverse)
@@ -67,6 +80,13 @@ The main functions in `bcdata` are:
 4. bcdc_get_record() - Print a catalogue record
 5. bcdc_get_data() - Get catalogue data
 6. bcdc_query_geodata() - Get & query catalogue geospatial data available through a Web Service
+
+In general, I use an iterative workflow with these packages:
+
+1. Search for datasets in the catalogue;
+2. Query the dataset to understand the data structure;
+3. Filter for records of interest; and
+4. Download
 
 
 ```{r search}
@@ -181,7 +201,7 @@ We can also create some quick summaries of the data, treating the attribute tabl
 
 treesDPG %>% 
   st_drop_geometry() %>% # drop geometry
-  mutate(age=2020-REFERENCE_YEAR+S_SPECIES_AGE_1+1) %>% 
+  mutate(age=2020-REFERENCE_YEAR+S_SPECIES_AGE_1) %>% 
 
   # plotting
   ggplot()+
@@ -220,7 +240,7 @@ treesDPG<-
 
 ```
 
-Let's map blocks older than 20 years:
+Let's map blocks by BGC unit:
 ```{r}
     
 mapview(treesDPG,zcol="MAP_LABEL")
