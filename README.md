@@ -21,21 +21,10 @@ Hardy Griesbauer
 
 ## Introduction
 
-### Silviculture data in BC
-
-Silviculture information in BC is largely collected and tracked through
-the RESULTS database (Reporting Silviculture Updates and Land Status
-Tracking System). The database stores silviculture-related information
-on the management of openings, disturbances, silviculture activities and
-obligation declarations as required by the Forest and Range Practices
-Act. Data in RESULTS are publically available through
-catalogue.data.gov.bc.ca. More information on RESULTS can be found here:
-<https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results>
-
 ### bcdata and bcmaps R packages
 
 The `bcdata` and `bcmaps` packages now provide an easy way to query,
-download and visualize select BC government datasets through the R
+download and visualize some BC government datasets through the R
 interface. This short vignette will demonstrate a few ways that we can
 do this using RESULTS and other datasets. These packages have been
 developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and
@@ -50,14 +39,6 @@ the `bcdata` package to download data form within R:
     need;
 3.  After downloading, you can quickly work with the data in R; and
 4.  Development team is very responsive and great to work with\!
-
-A few limitations I have run into using these packages:
-
-1.  Generally, only spatial data can be downloaded;
-2.  Broadband issues - there are times where downloading data from
-    `bcdata` has been slow;
-3.  Because packages are under development, there are some bugs (usually
-    mistakes from my end\!).
 
 ## Getting started
 
@@ -101,51 +82,68 @@ In general, I use an iterative workflow with these packages:
 1.  Search for datasets in the catalogue;
 2.  Query the dataset to understand the data structure;
 3.  Filter for records of interest; and
-4.  Download
+4.  Download the data into R
 
 <!-- end list -->
 
 ``` r
-bcdc_search("silviculture")
+bcdc_search("hydrology")
 ```
+
+    ## Found 101 matches. Returning the first 100.
+    ## To see them all, rerun the search and set the 'n' argument to 101.
 
     ## List of B.C. Data Catalogue Records
     ## 
-    ## Number of records: 22 (Showing the top 10)
+    ## Number of records: 100 (Showing the top 10)
     ## Titles:
-    ## 1: Indicator Summary Data: Trends in Silviculture in B.C. (csv)
-    ##  ID: b3369823-d130-4e8d-bcca-55c8749fab40
-    ##  Name: indicator-summary-data-trends-in-silviculture-in-b-c-
-    ## 2: RESULTS - Activity Treatment Units (other, wms, kml)
-    ##  ID: 07cabbdf-d7bf-4c50-919d-5b7d80086ef5
-    ##  Name: results-activity-treatment-units
-    ## 3: RESULTS - Forest Cover Silviculture (other, wms, kml)
-    ##  ID: 258bb088-4113-47b1-b568-ce20bd64e3e3
-    ##  Name: results-forest-cover-silviculture
-    ## 4: RESULTS - Forest Cover Species (Attribute Only) (other)
-    ##  ID: 2db77f8b-765b-488f-9752-f1349cf6ebfc
-    ##  Name: results-forest-cover-species-attribute-only
-    ## 5: RESULTS - Planting (other, wms)
-    ##  ID: 3666c26a-32d8-43e4-b8ad-59a315c7d3ce
-    ##  Name: results-planting
-    ## 6: RESULTS - Forest Cover Reserve (other, wms, kml)
-    ##  ID: 7028ac47-45dd-41d7-a371-be5a04177afe
-    ##  Name: results-forest-cover-reserve
-    ## 7: RESULTS - Openings (Attribute Only) (other)
-    ##  ID: f6d17c00-d4b9-401b-a20e-ef7e37b6d5e3
-    ##  Name: results-openings-attribute-only
-    ## 8: RESULTS - Openings svw (other, wms, kml)
-    ##  ID: 53a17fec-e9ad-4ac0-95e6-f5106a97e677
-    ##  Name: results-openings-svw
-    ## 9: RESULTS - Forest Cover Inventory (other, wms)
-    ##  ID: 56ac43a7-724a-4f01-b193-d5f9a16ef0a8
-    ##  Name: results-forest-cover-inventory
-    ## 10: Employment by industry sector and place of work, aggregated to census division (other)
-    ##  ID: f5c79d19-5d2a-489d-818c-57701b62cddf
-    ##  Name: employment-by-industry-sector-and-place-of-work-aggregated-to-census-division 
+    ## 1: Hydrology: Hydrologic Zone Boundaries of British Columbia (other, wms, kml)
+    ##  ID: 329fd234-8835-4d44-9aaa-97c37bfc8d92
+    ##  Name: hydrology-hydrologic-zone-boundaries-of-british-columbia
+    ## 2: Hydrology: Hydrometric Watershed Boundaries (other, wms, kml)
+    ##  ID: 02c0e328-e871-4d05-a672-8faf99ebfc11
+    ##  Name: hydrology-hydrometric-watershed-boundaries
+    ## 3: Hydrology: Low Flow Zones (other, wms, kml)
+    ##  ID: 83b8cb98-211e-4b8f-bc56-e6e9ec1c39d8
+    ##  Name: hydrology-low-flow-zones
+    ## 4: Hydrology: Normal Annual Runoff Isolines (1961 - 1990) - Historical (other, wms, kml)
+    ##  ID: d6f6ddc7-fbc2-4264-aa30-fc3d5138a6b3
+    ##  Name: hydrology-normal-annual-runoff-isolines-1961-1990-historical
+    ## 5: Atlas of Canada 1,000,000 National Frameworks Data - Hydrology Lakes (other)
+    ##  ID: 04db6ca8-e0c6-4e37-9a86-65f92d00f237
+    ##  Name: atlas-of-canada-1-000-000-national-frameworks-data-hydrology-lakes
+    ## 6: Hydrology: 10 Year Peak Flow Isolines (Historical) (other, wms, kml)
+    ##  ID: fed6d845-b7ff-4512-8f5f-595420cc43e8
+    ##  Name: hydrology-10-year-peak-flow-isolines-historical
+    ## 7: Hydrology: 100 Year Peak Flow Isolines (Historical) (other, wms, kml)
+    ##  ID: dd7d7ff3-9512-499a-ae55-56beedfbbf9c
+    ##  Name: hydrology-100-year-peak-flow-isolines-historical
+    ## 8: Atlas of Canada 1,000,000 National Frameworks Data - Roads (other)
+    ##  ID: a960b4a4-50ac-4a39-9bae-b11b7e8b418c
+    ##  Name: atlas-of-canada-1-000-000-national-frameworks-data-roads
+    ## 9: University of Victoria Aquifer Stress Evaluation (xlsx)
+    ##  ID: 17ffdf71-28f3-4a65-bba2-134622b50e8f
+    ##  Name: university-of-victoria-aquifer-stress-evaluation
+    ## 10: Indicator Summary Data: Change in Timing and Volume of River Flow in BC (1912-2012) (csv)
+    ##  ID: d6f30634-a6a8-45b5-808e-210036f25044
+    ##  Name: indicator-summary-data-change-in-timing-and-volume-of-river-flow-in-bc-1912-2012- 
     ## 
     ## Access a single record by calling bcdc_get_record(ID)
     ##       with the ID from the desired record.
+
+Records with *wms* are spatial files that can be queried and downloaded
+using `bcdc_query_geodata`.
+
+### Silviculture data in BC
+
+Silviculture information in BC is largely collected and tracked through
+the RESULTS database (Reporting Silviculture Updates and Land Status
+Tracking System). The database stores silviculture-related information
+on the management of openings, disturbances, silviculture activities and
+obligation declarations as required by the Forest and Range Practices
+Act. Data in RESULTS are publically available through
+catalogue.data.gov.bc.ca. More information on RESULTS can be found here:
+<https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results>
 
 ## Application of bcdata and bcmaps to RESULTS data
 
@@ -171,9 +169,9 @@ bcdc_query_geodata("results-forest-cover-silviculture")
     ## Warning: It is advised to use the permanent id ('258bb088-4113-47b1-b568-ce20bd64e3e3') rather than the name of the record ('results-forest-cover-silviculture') to guard against future name changes.
 
     ## Querying 'results-forest-cover-silviculture' record
-    ## * Using collect() on this object will return 866971 features and 159 fields
+    ## * Using collect() on this object will return 866981 features and 159 fields
     ## * At most six rows of the record are printed here
-    ## ---------------------------------------------------------------------------------------------------------------
+    ## ------------------------------
     ## Simple feature collection with 6 features and 159 fields
     ## geometry type:  MULTIPOLYGON
     ## dimension:      XY
@@ -254,9 +252,9 @@ let’s use `filter` to refine our query:
 2.  Filter treatment units that have Douglas-fir or western larch
     present.
 
-First, let’s filter for openings in the PG District. We’ll use both
-`bcmaps` and `bcdata` package to do this by downloading a shapefile for
-the PG District and use that as a bounding box:
+First, let’s filter for openings in the PG District. We’ll use `bcdata`
+package to do this by downloading a shapefile for the PG District and
+use that as a bounding box:
 
 ``` r
 # First, let's take a look at the natural resource district dataset
@@ -266,7 +264,7 @@ bcdc_query_geodata("natural-resource-nr-district")
     ## Querying 'natural-resource-nr-district' record
     ## * Using collect() on this object will return 23 features and 12 fields
     ## * At most six rows of the record are printed here
-    ## ---------------------------------------------------------------------------------------------------------------
+    ## ------------------------------
     ## Simple feature collection with 6 features and 12 fields
     ## geometry type:  POLYGON
     ## dimension:      XY
@@ -328,9 +326,10 @@ which we’ll load into our workspace in a subsequent chunk*
 # Now let's filter the records and download the data
 
   treesDPG<- # create new variable by
+    
     bcdc_query_geodata("results-forest-cover-silviculture") %>% # querying the results silviculture layer and
    
-    filter(WITHIN(dpg)) %>% # filter for records that are within the DPG and
+    filter(INTERSECTS(dpg)) %>% # filter for records that are within the DPG and
     
     filter(S_SPECIES_CODE_1 %in% sppList| # filter for our species within any of the five species per TU
             S_SPECIES_CODE_2 %in% sppList|
@@ -345,7 +344,13 @@ Let’s load this dataset into our workspace:
 
 ``` r
 load(here("data","treesDPG.RData"))
+
+dim(treesDPG)
 ```
+
+    ## [1] 169 162
+
+There are 169 treatment units planted with larch in DPG.
 
 Now we can plot the openings and see how things
 look:
@@ -394,9 +399,9 @@ treesDPG %>%
 
 #### Question: what is the BEC distribution of larch plantations in DPG?
 
-The `bcmaps` package also contains BEC maps, which can be used to look
-at larch distribution by BGC unit in DPG. BEC data are loaded into the
-workspace using the `bec()` function, and then can be joined to an
+The `bcmaps` package contains BEC spatial data, which can be used to
+look at larch distribution by BGC unit in DPG. BEC data are loaded into
+the workspace using the `bec()` function, and then can be joined to an
 existing dataset using the `st_join` function. This takes awhile, so I
 did it beforehand.
 
@@ -424,7 +429,8 @@ treesDPG %>%
   st_drop_geometry() %>% # drop geometry
   group_by(MAP_LABEL) %>% # group polygons by BGC unit
   summarise(Area=sum(FEATURE_AREA_SQM)/10000) %>% 
-  # plotting
+ 
+   # plotting
   ggplot()+
   aes(x=MAP_LABEL,y=Area)+
   geom_bar(stat="Identity")+

@@ -4,7 +4,7 @@ author: "Hardy Griesbauer"
 date: "06/04/2020"
 output: 
   
-  html_document
+ github_document
  
 
 ---
@@ -32,7 +32,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 
 ### bcdata and bcmaps R packages
-The `bcdata` and `bcmaps` packages now provide an easy way to query, download and visualize select BC government datasets through the R interface. This short vignette will demonstrate a few ways that we can do this using RESULTS and other datasets.  These packages have been developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and more information can be found here: https://bcgov.github.io/bcdata/
+The `bcdata` and `bcmaps` packages now provide an easy way to query, download and visualize some BC government datasets through the R interface. This short vignette will demonstrate a few ways that we can do this using RESULTS and other datasets.  These packages have been developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and more information can be found here: https://bcgov.github.io/bcdata/
 
 While BC government data can usually be downloaded through your browser at catalogue.data.gov.bc.ca, I think there are some advantages to using the `bcdata` package to download data form within R:
 
@@ -81,14 +81,16 @@ In general, I use an iterative workflow with these packages:
 1. Search for datasets in the catalogue;
 2. Query the dataset to understand the data structure;
 3. Filter for records of interest; and
-4. Download
+4. Download the data into R
 
 
 ```{r search}
 
-bcdc_search("silviculture")
+bcdc_search("hydrology")
 
 ```
+
+Records with *wms* are spatial files that can be queried and downloaded using `bcdc_query_geodata`. 
 
 ### Silviculture data in BC
 Silviculture information in BC is largely collected and tracked through the RESULTS database (Reporting Silviculture Updates and Land Status Tracking System).  The database stores silviculture-related information on the management of openings, disturbances, silviculture activities and obligation declarations as required by the Forest and Range Practices Act.  Data in RESULTS are publically available through catalogue.data.gov.bc.ca.  More information on RESULTS can be found here: https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results
@@ -115,12 +117,13 @@ This dataset would be too large (~1GB) to download efficiently.  So, let's use `
 1. Filter openings that are in Prince George District; and
 2. Filter treatment units that have Douglas-fir or western larch present.
 
-First, let's filter for openings in the PG District.  We'll use both `bcmaps` and `bcdata` package to do this by downloading a shapefile for the PG District and use that as a bounding box:
+First, let's filter for openings in the PG District.  We'll use `bcdata` package to do this by downloading a shapefile for the PG District and use that as a bounding box:
 
 ```{r filter openings for DPG}
 
 # First, let's take a look at the natural resource district dataset
 bcdc_query_geodata("natural-resource-nr-district")
+
 ```
 
 We can see that there are 23 NR districts in the province.  District codes are stored in the 'ORG_UNIT' column  Let's filter districts for DPG (Prince George) and download it as a shapefile.
@@ -159,9 +162,10 @@ Now we have a shapefile that we can use as a bounding box to filter and download
 # Now let's filter the records and download the data
 
   treesDPG<- # create new variable by
+    
     bcdc_query_geodata("results-forest-cover-silviculture") %>% # querying the results silviculture layer and
    
-    filter(WITHIN(dpg)) %>% # filter for records that are within the DPG and
+    filter(INTERSECTS(dpg)) %>% # filter for records that are within the DPG and
     
     filter(S_SPECIES_CODE_1 %in% sppList| # filter for our species within any of the five species per TU
             S_SPECIES_CODE_2 %in% sppList|
@@ -178,7 +182,11 @@ Let's load this dataset into our workspace:
 
 load(here("data","treesDPG.RData"))
 
+dim(treesDPG)
+
 ```
+
+There are 169 treatment units planted with larch in DPG.
 
 Now we can plot the openings and see how things look:
 
@@ -224,7 +232,7 @@ treesDPG %>%
 ```
 
 #### Question: what is the BEC distribution of larch plantations in DPG?
-The `bcmaps` package also contains BEC maps, which can be used to look at larch distribution by BGC unit in DPG.  BEC data are loaded into the workspace using the `bec()` function, and then can be joined to an existing dataset using the `st_join` function.  This takes awhile, so I did it beforehand.
+The `bcmaps` package contains BEC spatial data, which can be used to look at larch distribution by BGC unit in DPG.  BEC data are loaded into the workspace using the `bec()` function, and then can be joined to an existing dataset using the `st_join` function.  This takes awhile, so I did it beforehand.
 
 ```{r,eval=FALSE}
 
@@ -253,7 +261,8 @@ treesDPG %>%
   st_drop_geometry() %>% # drop geometry
   group_by(MAP_LABEL) %>% # group polygons by BGC unit
   summarise(Area=sum(FEATURE_AREA_SQM)/10000) %>% 
-  # plotting
+ 
+   # plotting
   ggplot()+
   aes(x=MAP_LABEL,y=Area)+
   geom_bar(stat="Identity")+
