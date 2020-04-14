@@ -4,7 +4,8 @@ author: "Hardy Griesbauer"
 date: "06/04/2020"
 output: 
   
-  github_document
+  html_document
+ 
 
 ---
 
@@ -30,9 +31,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-### Silviculture data in BC
-Silviculture information in BC is largely collected and tracked through the RESULTS database (Reporting Silviculture Updates and Land Status Tracking System).  The database stores silviculture-related information on the management of openings, disturbances, silviculture activities and obligation declarations as required by the Forest and Range Practices Act.  Data in RESULTS are publically available through catalogue.data.gov.bc.ca.  More information on RESULTS can be found here: https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results
-
 ### bcdata and bcmaps R packages
 The `bcdata` and `bcmaps` packages now provide an easy way to query, download and visualize select BC government datasets through the R interface. This short vignette will demonstrate a few ways that we can do this using RESULTS and other datasets.  These packages have been developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and more information can be found here: https://bcgov.github.io/bcdata/
 
@@ -42,12 +40,6 @@ While BC government data can usually be downloaded through your browser at catal
 2. You can query the data before downloading to extract only what you need;
 3. After downloading, you can quickly work with the data in R; and
 4. Development team is very responsive and great to work with!  
-
-A few limitations I have run into using these packages:
-
-1. Generally, only spatial data can be downloaded;
-2. Broadband issues - there are times where downloading data from `bcdata` has been slow;
-3. Because packages are under development, there are some bugs (usually mistakes from my end!).
 
 ## Getting started
 First thing we need to do is make sure we have some packages installed.  If you don't have the package already installed on your machine, run the following code to install from CRAN:
@@ -98,6 +90,8 @@ bcdc_search("silviculture")
 
 ```
 
+### Silviculture data in BC
+Silviculture information in BC is largely collected and tracked through the RESULTS database (Reporting Silviculture Updates and Land Status Tracking System).  The database stores silviculture-related information on the management of openings, disturbances, silviculture activities and obligation declarations as required by the Forest and Range Practices Act.  Data in RESULTS are publically available through catalogue.data.gov.bc.ca.  More information on RESULTS can be found here: https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/silviculture/silviculture-reporting-results
 
 ## Application of bcdata and bcmaps to RESULTS data
 
