@@ -131,8 +131,7 @@ catalogue.data.gov.bc.ca. More information on RESULTS can be found
 ### Reforestation with climate considerations in the Prince George District
 
 Western larch has been identified as a tree species that will be
-well-adapted to projected future climates in northern BC. In 2013,
-forest policy was developed that allowed foresters to plant larch
+well-adapted to projected future climates in northern BC. Forest policy has been developed to allow foresters to plant larch
 outside its natural range as a climate change adaptation silviculture
 measure.
 
