@@ -30,9 +30,9 @@ do this using RESULTS and other datasets. These packages have been
 developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and
 more information can be found here: <https://bcgov.github.io/bcdata/>
 
-While BC government data can usually be downloaded through your browser
-at catalogue.data.gov.bc.ca, I think there are some advantages to using
-the `bcdata` package to download data form within R:
+While BC government data can be downloaded through your browser at
+www.catalogue.data.gov.bc.ca, I think there are some advantages to using
+the `bcdata` package to download data from within R:
 
 1.  You are not limited to download limits;
 2.  You can query the data before downloading to extract only what you
@@ -149,7 +149,7 @@ catalogue.data.gov.bc.ca. More information on RESULTS can be found here:
 
 ### Reforestation with climate considerations in the Prince George District
 
-The Omineca Region’s climate action plan has targets around
+The Omineca Region’s Climate Action Plan has targets around
 reforestation with tree species that will likely remain well-adapted to
 projected future climates. Douglas-fir and western larch have been
 identified as tree species that will remain viable into the future.
@@ -169,9 +169,9 @@ bcdc_query_geodata("results-forest-cover-silviculture")
     ## Warning: It is advised to use the permanent id ('258bb088-4113-47b1-b568-ce20bd64e3e3') rather than the name of the record ('results-forest-cover-silviculture') to guard against future name changes.
 
     ## Querying 'results-forest-cover-silviculture' record
-    ## * Using collect() on this object will return 866981 features and 159 fields
+    ## * Using collect() on this object will return 867077 features and 159 fields
     ## * At most six rows of the record are printed here
-    ## ------------------------------
+    ## -----------------------------------------------------------------------------------------------------------------------------
     ## Simple feature collection with 6 features and 159 fields
     ## geometry type:  MULTIPOLYGON
     ## dimension:      XY
@@ -264,7 +264,7 @@ bcdc_query_geodata("natural-resource-nr-district")
     ## Querying 'natural-resource-nr-district' record
     ## * Using collect() on this object will return 23 features and 12 fields
     ## * At most six rows of the record are printed here
-    ## ------------------------------
+    ## -----------------------------------------------------------------------------------------------------------------------------
     ## Simple feature collection with 6 features and 12 fields
     ## geometry type:  POLYGON
     ## dimension:      XY
@@ -290,7 +290,7 @@ codes are stored in the ‘ORG\_UNIT’ column Let’s filter districts for
 DPG (Prince George) and download it as a shapefile.
 
 ``` r
-dpg<-  # Create new variable called dpg
+dpg<-  # Create new spatial feature called dpg
   bcdc_query_geodata("natural-resource-nr-district") %>%  # query the nr district dataset 
   filter(ORG_UNIT=="DPG") %>% # filter for Prince George District
   collect() # and download it 
@@ -325,7 +325,7 @@ which we’ll load into our workspace in a subsequent chunk*
  
 # Now let's filter the records and download the data
 
-  treesDPG<- # create new variable by
+  treesDPG<- # create new spaial feature by
     
     bcdc_query_geodata("results-forest-cover-silviculture") %>% # querying the results silviculture layer and
    
@@ -370,8 +370,8 @@ attribute table as a data frame in R:
 
 ``` r
 treesDPG %>% 
-  st_drop_geometry() %>% # drop geometry
-  mutate(age=2020-REFERENCE_YEAR+S_SPECIES_AGE_1) %>% 
+  st_drop_geometry() %>% # drop geometry, likel not necessary
+  mutate(age=2020-REFERENCE_YEAR+S_SPECIES_AGE_1) %>% # create an age column
 
   # plotting
   ggplot()+
@@ -406,12 +406,13 @@ existing dataset using the `st_join` function. This takes awhile, so I
 did it beforehand.
 
 ``` r
-# First, download BEC data 
+# First, load BEC data into your workspace 
  becData<-bec() 
 
 # Now join with dataset
-treesDPG<-  
-  st_join(treesDPG,bgcPG[,"MAP_LABEL"])
+treesDPG<-  # update spatial feature 
+
+    st_join(treesDPG,bgcPG[,"MAP_LABEL"]) # join BEC data for each polygon
 ```
 
 Let’s map blocks by BGC unit:

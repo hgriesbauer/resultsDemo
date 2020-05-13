@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ### bcdata and bcmaps R packages
 The `bcdata` and `bcmaps` packages now provide an easy way to query, download and visualize some BC government datasets through the R interface. This short vignette will demonstrate a few ways that we can do this using RESULTS and other datasets.  These packages have been developed by Andy Teucher, Sam Albers, Stephanie Hazlitt and others, and more information can be found here: https://bcgov.github.io/bcdata/
 
-While BC government data can usually be downloaded through your browser at catalogue.data.gov.bc.ca, I think there are some advantages to using the `bcdata` package to download data form within R:
+While BC government data can be downloaded through your browser at www.catalogue.data.gov.bc.ca, I think there are some advantages to using the `bcdata` package to download data from within R:
 
 1. You are not limited to download limits;
 2. You can query the data before downloading to extract only what you need;
@@ -86,7 +86,7 @@ In general, I use an iterative workflow with these packages:
 
 ```{r search}
 
-bcdc_search("hydrology")
+bcdc_search("silviculture")
 
 ```
 
@@ -98,7 +98,7 @@ Silviculture information in BC is largely collected and tracked through the RESU
 ## Application of bcdata and bcmaps to RESULTS data
 
 ### Reforestation with climate considerations in the Prince George District
-The Omineca Region's climate action plan has targets around reforestation with tree species that will likely remain well-adapted to projected future climates.  Douglas-fir and western larch have been identified as tree species that will remain viable into the future.
+The Omineca Region's Climate Action Plan has targets around reforestation with tree species that will likely remain well-adapted to projected future climates.  Douglas-fir and western larch have been identified as tree species that will remain viable into the future.
 
 *Question: how much western larch is being planted in the Prince George District?*
 
@@ -130,7 +130,7 @@ We can see that there are 23 NR districts in the province.  District codes are s
 
 ```{r download DPG}
 
-dpg<-  # Create new variable called dpg
+dpg<-  # Create new spatial feature called dpg
   bcdc_query_geodata("natural-resource-nr-district") %>%  # query the nr district dataset 
   filter(ORG_UNIT=="DPG") %>% # filter for Prince George District
   collect() # and download it 
@@ -161,7 +161,7 @@ Now we have a shapefile that we can use as a bounding box to filter and download
  
 # Now let's filter the records and download the data
 
-  treesDPG<- # create new variable by
+  treesDPG<- # create new spaial feature by
     
     bcdc_query_geodata("results-forest-cover-silviculture") %>% # querying the results silviculture layer and
    
@@ -205,8 +205,8 @@ We can also create some quick summaries of the data, treating the attribute tabl
 ```{r,warning=FALSE}
 
 treesDPG %>% 
-  st_drop_geometry() %>% # drop geometry
-  mutate(age=2020-REFERENCE_YEAR+S_SPECIES_AGE_1) %>% 
+  st_drop_geometry() %>% # drop geometry, likel not necessary
+  mutate(age=2020-REFERENCE_YEAR+S_SPECIES_AGE_1) %>% # create an age column
 
   # plotting
   ggplot()+
@@ -236,12 +236,13 @@ The `bcmaps` package contains BEC spatial data, which can be used to look at lar
 
 ```{r,eval=FALSE}
 
-# First, download BEC data 
+# First, load BEC data into your workspace 
  becData<-bec() 
 
 # Now join with dataset
-treesDPG<-  
-  st_join(treesDPG,bgcPG[,"MAP_LABEL"])
+treesDPG<-  # update spatial feature 
+
+    st_join(treesDPG,bgcPG[,"MAP_LABEL"]) # join BEC data for each polygon
 
 ```
 
